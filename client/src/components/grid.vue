@@ -1,50 +1,41 @@
 <template>
-  <div class="wrapper">
-    <div id="grid-template">
-      <nav class="level level-right">
-        <div>
-          <input
-            name="query"
-            class="input"
-            v-model="searchQuery"
-            placeholder="Digite para pesquisar.."
-          >
-        </div>
-      </nav>
-      <div class="table-header-wrapper">
-        <table class="table-header">
-          <thead>
-            <th
-              v-for="key in columns"
-              @click="sortBy(key)"
-              :class="{ active: sortKey == key }"
-              class="header-background"
-              v-bind:key="key"
-            >
-              {{ key | capitalize }}
-              <span
-                class="arrow"
-                :class="sortOrders[key] > 0 ? 'asc' : 'dsc'"
-              ></span>
-            </th>
-          </thead>
-        </table>
+  <div class="grid-template">
+    <nav class="level level-right">
+      <div>
+        <input
+          name="query"
+          class="input"
+          v-model="searchQuery"
+          placeholder="Digite para pesquisar.."
+        >
       </div>
-      <div class="table-body-wrapper">
-        <table class="table-body">
-          <tbody>
-            <tr v-for="entry in filteredData" v-bind:key="entry">
-              <td v-for="key in columns" v-bind:key="key">{{entry[key]}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+    </nav>
+    <table class="table-header">
+      <thead>
+        <th
+          v-for="key in columns"
+          @click="sortBy(key)"
+          :class="{ active: sortKey == key }"
+          class="header-background"
+          v-bind:key="key"
+        >
+          {{ key | capitalize }}
+          <span class="arrow" :class="sortOrders[key] > 0 ? 'asc' : 'dsc'"></span>
+        </th>
+      </thead>
+      
+    </table>
+    <table class="table-body">
+      <tbody class="border-row">
+        <tr v-for="entry in filteredData" :key="entry">
+          <td v-for="key in columns" :key="key">{{entry[key]}}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
-
 <script>
-import Icon from 'vue-awesome/components/Icon';
+import Icon from "vue-awesome/components/Icon";
 
 export default {
   name: "Mygrid",
@@ -112,10 +103,6 @@ export default {
 </script>
 
 <style scoped>
-body {
-  font-size: 14px;
-  color: #555;
-}
 .header-background {
   background-color: #add8e6;
 }
@@ -164,11 +151,15 @@ th.active .arrow {
   border-top: 4px solid #000000;
 }
 
-#grid-template {
+.grid-template {
   display: flex;
   display: -webkit-flex;
   flex-direction: column;
   -webkit-flex-direction: column;
   width: 100%;
+}
+.border-row {
+  border-left: 1px solid #d3d3d3;
+  border-right: 1px solid #d3d3d3;
 }
 </style>
