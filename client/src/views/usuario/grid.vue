@@ -1,7 +1,7 @@
 <template>
   <div>
     <grid :data="gridData" :columns="columns"></grid>
-    <usuario-modal @submit="submit(form)"></usuario-modal>
+    <usuario-modal @refreshPage="loadPage"></usuario-modal>
   </div>
 </template>
 
@@ -15,40 +15,36 @@ export default {
   name: "UsuarioGrid",
   components: {
     Grid,
-    UsuarioModal,
+    UsuarioModal
   },
   data() {
     return {
-      columns: ["id", "nome", "email", "senha"],
+      isSuccess: false,
+      columns: ["id", "nome", "email", "telefone"],
       gridData: []
     };
   },
-  created() {
-    api.getUsers().then(content => {
-      this.gridData = content.map(data => {
-        return {
-          id: data.userId,
-          nome: data.nome,
-          email: data.email,
-          senha: data.senha
-        };
-      });
-    });
+  async created() {
+    await this.loadPage();
+    this.$snotify.info("Usuários carregados com sucesso");
   },
   methods: {
-    submit(form) {
-      console.log(form);
-      debugger;
-    }
+    loadPage() {
+      api.getUsers().then(content => {
+        this.gridData = content.map(data => {
+          return {
+            id: data.userId,
+            nome: data.nomeCompleto,
+            email: data.email,
+            senha: data.senha,
+            telefone: data.telefone
+          };
+        });
+      });
+    },
+    methods: {
+  },
   }
 };
 </script>
-<style>
-.button {
-  background-color: aquamarine;
-  margin: 50px;
-  padding: 5px;
-  cursor: pointer;
-}
-</style>
 
