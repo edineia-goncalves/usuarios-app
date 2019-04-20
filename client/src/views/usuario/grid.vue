@@ -1,16 +1,15 @@
 <template>
   <div>
     <usuario-modal @refreshPage="loadPage"></usuario-modal>
-    <grid :data="gridData" 
-          :columns="columns" 
-          @clickRow="clickRow"
-          @deleteRow="deleteRow"></grid>
+
+    <grid :data="gridData" :columns="columns" @clickRow="clickRow" @deleteRow="deleteRow"></grid>
+
     <usuario-modal-edit
-    v-if="openModal"
-    :open-modal="openModal" 
-    @close="openModal=false"
-    @refreshPage="loadPage">
-    </usuario-modal-edit>
+      v-if="openModal"
+      :open-modal="openModal"
+      @close="openModal=false"
+      @refreshPage="loadPage"
+    ></usuario-modal-edit>
   </div>
 </template>
 

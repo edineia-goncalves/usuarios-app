@@ -4,7 +4,10 @@ import Vue from "vue";
 import App from "./App";
 import "./../node_modules/bulma/css/bulma.css";
 import Snotify from 'vue-snotify';
-import 'vue-snotify/styles/material.css'; 
+import 'vue-snotify/styles/material.css';
+import VueTheMask from 'vue-the-mask';
+
+Vue.use(VueTheMask);
 
 Vue.use(Snotify);
 

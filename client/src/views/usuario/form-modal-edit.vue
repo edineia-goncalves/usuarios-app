@@ -26,7 +26,9 @@
       <div class="field">
         <label class="label">Telefone</label>
         <div class="control">
-          <input class="input" type="tel" placeholder="(99) 9999999-99" v-model="form.telefone">
+          <input class="input" type="tel"
+          v-mask="'(##)#####-####'"
+           placeholder="(99) 9999999-99" v-model="form.telefone">
         </div>
       </div>
       <div class="field">
@@ -96,12 +98,23 @@ export default {
         .then(() => {
           this.$emit("refreshPage");
           this.$snotify.success("Usuário editado com sucesso");
+          this.formReset();
         })
         .catch(error => {
           const errorMessage = error || "Erro ao salvar usuário";
           this.$snotify.error(errorMessage);
+          this.formReset();
         });
-    }
+    },
+    formReset() {
+      const form = {
+        nomeCompleto: '',
+        email: '',
+        telefone: '',
+        senha: ''
+      };
+      this.form = form;
+    },
   }
 };
 </script>
