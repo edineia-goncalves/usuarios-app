@@ -1,12 +1,7 @@
 <template>
   <div>
-    <p>Cadastro de usuários</p>
-    <br>
-    <a class="button is-primary" @click="click">Incluir novo usuario</a>
-    <usuario-form></usuario-form>
-    <br>
-    <br>
-    <grid :data="gridData" :columns="columns" @deleteRow="deleteUser"></grid>
+    <grid :data="gridData" :columns="columns"></grid>
+    <usuario-modal @submit="submit(form)"></usuario-modal>
   </div>
 </template>
 
@@ -14,17 +9,16 @@
 import api from "@/services/usuario-api";
 
 import Grid from "@/components/grid";
-import UsuarioForm from "./form-modal";
+import UsuarioModal from "./form-modal";
 
 export default {
   name: "UsuarioGrid",
   components: {
     Grid,
-    UsuarioForm
+    UsuarioModal,
   },
   data() {
     return {
-      openModal : false,
       columns: ["id", "nome", "email", "senha"],
       gridData: []
     };
@@ -42,11 +36,9 @@ export default {
     });
   },
   methods: {
-    click() {
+    submit(form) {
+      console.log(form);
       debugger;
-      this.openModal = true;
-    },
-    deleteUser(id) {
     }
   }
 };
