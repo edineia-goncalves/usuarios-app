@@ -38,7 +38,7 @@
 import Icon from "vue-awesome/components/Icon";
 
 export default {
-  name: "Mygrid",
+  name: "Grid",
   components: {
     Icon
   },
