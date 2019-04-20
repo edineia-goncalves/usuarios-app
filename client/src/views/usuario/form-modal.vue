@@ -1,12 +1,8 @@
 <template>
   <div>
     <a class="button is-pulled-left is-primary" @click="openModal = !openModal">Incluir novo usuário</a>
-    <modal
-      :open-modal="openModal"
-      @close="closeForm"
-      title="Novo usuário"
-      @save="save(form)"
-    >
+    <modal :open-modal="openModal" @close="closeForm" title="Novo usuário" @save="save(form)">
+      <p class="has-text-danger is-size-7" v-for="error in errors" :key="error">{{ error }}</p>
       <div class="field">
         <label class="label">Nome completo</label>
         <div class="control">
@@ -39,8 +35,18 @@
       <div class="field">
         <label class="label">Senha</label>
         <div class="control">
-          <input class="input" type="password" v-model="form.senha">
+          <input class="input" :type="type" v-model="form.senha">
         </div>
+        <span
+          v-if="this.type === 'password'"
+          @click="tooglePassword"
+          class="tag is-light is-pulled-left tag-config"
+        >mostrar senha</span>
+        <span
+          v-else
+          @click="tooglePassword"
+          class="tag is-light is-pulled-left tag-config"
+        >esconder senha</span>
       </div>
     </modal>
   </div>
@@ -57,6 +63,8 @@ export default {
   },
   data() {
     return {
+      errors: [],
+      type: "password",
       openModal: false,
       form: {
         nomeCompleto: "",
@@ -68,6 +76,7 @@ export default {
   },
   methods: {
     save(form) {
+      this.checkForm(form);
       api
         .saveUser(form)
         .then(() => {
@@ -84,18 +93,51 @@ export default {
     },
     formReset() {
       const form = {
-        nomeCompleto: '',
-        email: '',
-        telefone: '',
-        senha: ''
+        nomeCompleto: "",
+        email: "",
+        telefone: "",
+        senha: ""
       };
       this.form = form;
     },
     closeForm() {
       this.openModal = false;
       this.formReset();
+    },
+    checkForm(form) {
+      this.errors = [];
+
+      if (!form.nomeCompleto) {
+        this.errors.push("O nome é obrigatório.");
+      }
+      if (!form.email) {
+        this.errors.push("O e-mail é obrigatório.");
+      } else if (!this.validEmail(form.email)) {
+        this.errors.push("Utilize um e-mail válido exemplo email@email.com");
+      }
+      if (!form.senha) {
+        this.errors.push("O senha é obrigatória.");
+      }
+      if (!this.errors.length) {
+        return true;
+      }
+
+      form.preventDefault();
+    },
+    validEmail(email) {
+      var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(email);
+    },
+    tooglePassword() {
+      this.type = this.type === "password" ? "text" : "password";
     }
   }
 };
 </script>
+<style scoped>
+.tag-config {
+  margin-top: 10px;
+  cursor: pointer;
+}
+</style>
 

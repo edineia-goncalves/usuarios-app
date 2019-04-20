@@ -1,25 +1,24 @@
 <template>
   <div id="app">
     <usuario/>
-     <vue-snotify></vue-snotify>
+    <vue-snotify></vue-snotify>
   </div>
 </template>
 
 <script>
-
-import Usuario from './views/usuario/index';
+import Usuario from "./views/usuario/index";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     Usuario
   }
-}
+};
 </script>
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

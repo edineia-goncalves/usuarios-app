@@ -27,8 +27,17 @@
     <table class="table-body">
       <tbody class="border-row">
         <tr class="hover-row" v-for="entry in filteredData" :key="entry">
-          <td v-for="key in columns"  title="clique para editar registro" :key="key" @click="onClick(entry)">{{ entry[key] }}</td>
-          <button class="delete button-delete" title="excluir resgistro ?" @click="deleteRow(entry)"></button>
+          <td
+            v-for="key in columns"
+            title="clique para editar registro"
+            :key="key"
+            @click="onClick(entry)"
+          >{{ entry[key] }}</td>
+          <button
+            class="delete button-delete"
+            title="excluir resgistro ?"
+            @click="deleteRow(entry)"
+          ></button>
         </tr>
       </tbody>
     </table>

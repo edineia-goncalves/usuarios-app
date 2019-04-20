@@ -6,6 +6,7 @@
       title="Editar usuário"
       @save="save(form)"
     >
+      <p class="has-text-danger is-size-7" v-for="error in errors" :key="error">{{ error }}</p>
       <div class="field">
         <label class="label">Nome completo</label>
         <div class="control">
@@ -26,15 +27,31 @@
       <div class="field">
         <label class="label">Telefone</label>
         <div class="control">
-          <input class="input" type="tel"
-          v-mask="'(##)#####-####'"
-           placeholder="(99) 9999999-99" v-model="form.telefone">
+          <input
+            class="input"
+            type="tel"
+            v-mask="'(##)#####-####'"
+            placeholder="(99) 9999999-99"
+            v-model="form.telefone"
+          >
         </div>
       </div>
       <div class="field">
         <label class="label">Senha</label>
         <div class="control">
-          <input class="input" type="password" v-model="form.senha">
+          <input class="input" :type="type" v-model="form.senha">
+        </div>
+        <div>
+          <span
+            v-if="this.type === 'password'"
+            @click="tooglePassword"
+            class="tag is-light is-pulled-left tag-config"
+          >mostrar senha</span>
+          <span
+            v-else
+            @click="tooglePassword"
+            class="tag is-light is-pulled-left tag-config"
+          >esconder senha</span>
         </div>
       </div>
     </modal>
@@ -54,7 +71,9 @@ export default {
   },
   data() {
     return {
+      errors: [],
       openModal: false,
+      type: "password",
       form: {
         id: "",
         nomeCompleto: "",
@@ -90,6 +109,7 @@ export default {
         });
     },
     save(form) {
+      this.checkForm(form);
       const formUser = { ...form };
       formUser.userId = form.id;
       const { id, ...formEdit } = formUser;
@@ -108,13 +128,46 @@ export default {
     },
     formReset() {
       const form = {
-        nomeCompleto: '',
-        email: '',
-        telefone: '',
-        senha: ''
+        nomeCompleto: "",
+        email: "",
+        telefone: "",
+        senha: ""
       };
       this.form = form;
     },
+    checkForm(form) {
+      this.errors = [];
+
+      if (!form.nomeCompleto) {
+        this.errors.push("O nome é obrigatório.");
+      }
+      if (!form.email) {
+        this.errors.push("O e-mail é obrigatório.");
+      } else if (!this.validEmail(form.email)) {
+        this.errors.push("Utilize um e-mail válido exemplo email@email.com");
+      }
+      if (!form.senha) {
+        this.errors.push("O senha é obrigatória.");
+      }
+      if (!this.errors.length) {
+        return true;
+      }
+
+      form.preventDefault();
+    },
+    validEmail(email) {
+      var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(email);
+    },
+    tooglePassword() {
+      this.type = this.type === "password" ? "text" : "password";
+    }
   }
 };
 </script>
+<style scoped>
+.tag-config {
+  margin-top: 10px;
+  cursor: pointer;
+}
+</style>
