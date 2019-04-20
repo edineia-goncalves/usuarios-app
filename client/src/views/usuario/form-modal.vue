@@ -1,10 +1,12 @@
 <template>
-  <form>
+  <div>
     <a class="button" @click="openModal = !openModal">Incluir</a>
-    <modal :open-modal="openModal" 
-           @close="openModal = false"
-            title="Novo usuário"
-            @save="$emit('submit', form)">
+    <modal
+      :open-modal="openModal"
+      @close="openModal = false"
+      title="Novo usuário"
+      @save="save(form)"
+    >
       <div class="field">
         <label class="label">Nome completo</label>
         <div class="control">
@@ -35,10 +37,11 @@
         </div>
       </div>
     </modal>
-  </form>
+  </div>
 </template>
 
 <script>
+import api from "@/services/usuario-api";
 import Modal from "@/components/modal";
 
 export default {
@@ -58,7 +61,20 @@ export default {
     };
   },
   methods: {
-  }
+    save(form) {
+      api
+        .saveUser(form)
+        .then(() => {
+          this.openModal = false;
+          this.$emit("refreshPage");
+          this.$snotify.success("Usuário incluído com sucesso");
+        })
+        .catch(error => {
+          const errorMessage = error || "Erro ao salvar usuário";
+          this.$snotify.error(errorMessage);
+        });
+    }
+  },
 };
 </script>
 

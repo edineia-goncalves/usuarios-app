@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <usuario/>
+     <vue-snotify></vue-snotify>
   </div>
 </template>
 
