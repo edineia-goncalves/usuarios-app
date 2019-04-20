@@ -1,6 +1,9 @@
 <template>
   <div>
-    <grid :data="gridData" :columns="columns"></grid>
+    <grid :data="gridData" 
+          :columns="columns" 
+          @clickRow="clickRow"
+          @deleteRow="deleteRow"></grid>
     <usuario-modal @refreshPage="loadPage"></usuario-modal>
   </div>
 </template>
@@ -19,7 +22,6 @@ export default {
   },
   data() {
     return {
-      isSuccess: false,
       columns: ["id", "nome", "email", "telefone"],
       gridData: []
     };
@@ -42,8 +44,21 @@ export default {
         });
       });
     },
-    methods: {
-  },
+    clickRow(id) {
+      console.log(id);
+    },
+    deleteRow(id) {
+      api
+        .deleteUser(id)
+        .then(() => {
+          this.$snotify.success("Usuário excluído com sucesso");
+          this.loadPage();
+        })
+        .catch(error => {
+          const errorMessage = error || "Erro ao excluir usuário";
+          this.$snotify.error(errorMessage);
+        });
+    }
   }
 };
 </script>

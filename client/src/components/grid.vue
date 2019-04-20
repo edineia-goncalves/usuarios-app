@@ -23,25 +23,20 @@
           <span class="arrow" :class="sortOrders[key] > 0 ? 'asc' : 'dsc'"></span>
         </th>
       </thead>
-      
     </table>
     <table class="table-body">
       <tbody class="border-row">
-        <tr v-for="entry in filteredData" :key="entry">
-          <td v-for="key in columns" :key="key">{{entry[key]}}</td>
+        <tr class="hover-row" v-for="entry in filteredData" :key="entry">
+          <td v-for="key in columns"  title="clique para editar registro" :key="key" @click="onClick(entry)">{{ entry[key] }}</td>
+          <button class="delete button-delete" title="excluir resgistro ?" @click="deleteRow(entry)"></button>
         </tr>
       </tbody>
     </table>
   </div>
 </template>
 <script>
-import Icon from "vue-awesome/components/Icon";
-
 export default {
   name: "Grid",
-  components: {
-    Icon
-  },
   props: {
     data: Array,
     columns: Array
@@ -52,6 +47,13 @@ export default {
       sortKey: "",
       sortOrders: {}
     };
+  },
+  created() {
+    let sortOrders = {};
+    this.columns.forEach(function(key) {
+      sortOrders[key] = 1;
+    });
+    this.sortOrders = sortOrders;
   },
   computed: {
     filteredData: function() {
@@ -90,14 +92,13 @@ export default {
     sortBy: function(key) {
       this.sortKey = key;
       this.sortOrders[key] = this.sortOrders[key] * -1;
+    },
+    onClick({ id }) {
+      this.$emit("clickRow", id);
+    },
+    deleteRow({ id }) {
+      this.$emit("deleteRow", id);
     }
-  },
-  created() {
-    let sortOrders = {};
-    this.columns.forEach(function(key) {
-      sortOrders[key] = 1;
-    });
-    this.sortOrders = sortOrders;
   }
 };
 </script>
@@ -161,5 +162,15 @@ th.active .arrow {
 .border-row {
   border-left: 1px solid #d3d3d3;
   border-right: 1px solid #d3d3d3;
+}
+.hover-row:hover {
+  background-color: #d3d3d3;
+  cursor: pointer;
+}
+.button-delete {
+  padding: 1px;
+  cursor: pointer;
+  margin: 10px;
+  
 }
 </style>
