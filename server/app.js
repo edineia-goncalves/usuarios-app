@@ -20,7 +20,6 @@ app.delete("/deleteUser/:userId", (req, res) => {
 });
 
 app.post("/postUser", (req, res) => {
-  debugger;
   if (service.SaveUser(req.body)) {
     res.sendStatus(200);
   } else {
