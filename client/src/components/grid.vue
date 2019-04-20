@@ -168,9 +168,7 @@ th.active .arrow {
   cursor: pointer;
 }
 .button-delete {
-  padding: 1px;
   cursor: pointer;
   margin: 10px;
-  
 }
 </style>

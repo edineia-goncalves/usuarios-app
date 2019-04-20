@@ -1,10 +1,9 @@
 <template>
   <div>
-    <a class="button" @click="openModal = !openModal">Incluir</a>
     <modal
       :open-modal="openModal"
-      @close="openModal = false"
-      title="Novo usuário"
+      @close="$emit('close')"
+      title="Editar usuário"
       @save="save(form)"
     >
       <div class="field">
@@ -39,13 +38,15 @@
     </modal>
   </div>
 </template>
-
 <script>
 import api from "@/services/usuario-api";
 import Modal from "@/components/modal";
 
 export default {
-  name: "UsuarioModal",
+  name: "UsuarioModalEdit",
+  props: {
+    openModal: Boolean
+  },
   components: {
     Modal
   },
@@ -53,6 +54,7 @@ export default {
     return {
       openModal: false,
       form: {
+        id: "",
         nomeCompleto: "",
         email: "",
         telefone: "",
@@ -60,21 +62,46 @@ export default {
       }
     };
   },
+  created() {
+    this.loadForm();
+    this.$snotify.info("Usuário carregado com sucesso");
+  },
   methods: {
+    async loadForm() {
+      const id = Number(localStorage.getItem("userId"));
+      return await api
+        .getUsers()
+        .then(content => {
+          const usuario = content.filter(usuario => usuario.userId === id);
+          const form = {
+            id: usuario[0].userId,
+            nomeCompleto: usuario[0].nomeCompleto,
+            email: usuario[0].email,
+            telefone: usuario[0].telefone,
+            senha: usuario[0].senha
+          };
+          this.form = form;
+        })
+        .catch(error => {
+          const errorMessage = error || "Erro ao carregar usuário";
+          this.$snotify.error(errorMessage);
+        });
+    },
     save(form) {
+      const formUser = { ...form };
+      formUser.userId = form.id;
+      const { id, ...formEdit } = formUser;
       api
-        .saveUser(form)
+        .saveUser(formEdit)
         .then(() => {
-          this.openModal = false;
           this.$emit("refreshPage");
-          this.$snotify.success("Usuário incluído com sucesso");
+          this.$snotify.success("Usuário editado com sucesso");
         })
         .catch(error => {
           const errorMessage = error || "Erro ao salvar usuário";
           this.$snotify.error(errorMessage);
         });
-    },
-  },
+    }
+  }
 };
 </script>
-

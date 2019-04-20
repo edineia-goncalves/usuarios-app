@@ -1,10 +1,16 @@
 <template>
   <div>
+    <usuario-modal @refreshPage="loadPage"></usuario-modal>
     <grid :data="gridData" 
           :columns="columns" 
           @clickRow="clickRow"
           @deleteRow="deleteRow"></grid>
-    <usuario-modal @refreshPage="loadPage"></usuario-modal>
+    <usuario-modal-edit
+    v-if="openModal"
+    :open-modal="openModal" 
+    @close="openModal=false"
+    @refreshPage="loadPage">
+    </usuario-modal-edit>
   </div>
 </template>
 
@@ -13,15 +19,18 @@ import api from "@/services/usuario-api";
 
 import Grid from "@/components/grid";
 import UsuarioModal from "./form-modal";
+import UsuarioModalEdit from "./form-modal-edit";
 
 export default {
   name: "UsuarioGrid",
   components: {
     Grid,
-    UsuarioModal
+    UsuarioModal,
+    UsuarioModalEdit
   },
   data() {
     return {
+      openModal: false,
       columns: ["id", "nome", "email", "telefone"],
       gridData: []
     };
@@ -43,9 +52,11 @@ export default {
           };
         });
       });
+      this.openModal = false;
     },
     clickRow(id) {
-      console.log(id);
+      localStorage.setItem("userId", id);
+      this.openModal = !this.openModal;
     },
     deleteRow(id) {
       api
